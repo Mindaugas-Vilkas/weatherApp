@@ -17,7 +17,9 @@ Route::get('/', function () {
     return view('main');
 });
 
-Route::post('/get-weather', 'RequestWeatherController@getWeather');
+Route::get('/get-weather', 'RequestWeatherController@getWeather');
+
+Route::post('/alert', 'RequestWeatherController@createAlert');
 
 //route::post('/get-weather', function(Request $request) {
 //
