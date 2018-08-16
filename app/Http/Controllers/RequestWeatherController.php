@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
-use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +24,7 @@ class RequestWeatherController extends Controller
         $res = $client->request('GET', "http://api.openweathermap.org/data/2.5/weather?q={$city}&appid={$appid}");
         $resBody = json_decode((string)$res->getBody());
 
-        if(isset($resBody->wind->deg)){
+        if(isset($resBody->wind->deg)) {
             $windDirection = (int)$resBody->wind->deg / 45;
         } else {
             $windDirection = 0;
@@ -45,7 +43,8 @@ class RequestWeatherController extends Controller
      * @param  Request
      * @return View
      */
-    public function createAlert(Request $request) {
+    public function createAlert(Request $request)
+    {
 
         $email = $request->requestAlertEmail;
         $city = $request->requestAlertCity;

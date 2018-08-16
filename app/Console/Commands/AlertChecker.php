@@ -51,8 +51,9 @@ class AlertChecker extends Command
         $wind = json_decode((string)$res->getBody())->wind->speed;
         if($wind >= 10){
 
-            foreach(DB::table('requested_alerts')->get() as $q){
-                Mail::send('mail', ['content' => 'Dangerous winds of over 10 m/s, try to stay indoors.'], function ($message) use ($q){
+            foreach(DB::table('requested_alerts')->get() as $q) {
+                Mail::send('mail', ['content' => 'Dangerous winds of over 10 m/s, try to stay indoors.'], function ($message) use ($q)
+                {
                     $message->from('weatherApp@pretendmail.com', 'Weather App');
                     $message->to($q->email);
                 });
@@ -60,10 +61,12 @@ class AlertChecker extends Command
 
             DB::table('dangerous')->where('id', 1)->update(['dangerous' => 1, 'city' => $city]);
 
-        } elseif($wind < 10 && $dangerous) {
+        } elseif($wind < 10 && $dangerous)
+        {
 
-            foreach(DB::table('requested_alerts')->get() as $q){
-                Mail::send('mail', ['content' => 'Dangerous winds have subsided.'], function ($message) use ($q){
+            foreach(DB::table('requested_alerts')->get() as $q) {
+                Mail::send('mail', ['content' => 'Dangerous winds have subsided.'], function ($message) use ($q)
+                {
                     $message->from('weatherApp@pretendmail.com', 'Weather App');
                     $message->to($q->email);
                 });
