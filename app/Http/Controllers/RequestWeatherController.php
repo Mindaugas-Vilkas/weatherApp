@@ -50,7 +50,7 @@ class RequestWeatherController extends Controller
         $email = $request->requestAlertEmail;
         $city = $request->requestAlertCity;
 
-        $insert = DB::table('requested_locations')->insertGetId([
+        $insert = DB::table('requested_alerts')->insertGetId([
             'email'       => $email,
             'city'        => $city,
             'created_at'  => Carbon::now()
