@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use GuzzleHttp;
+
 
 class AlertChecker extends Command
 {
@@ -38,7 +40,20 @@ class AlertChecker extends Command
      */
     public function handle()
     {
-        $city = DB::table('requested_locations')->orderBy('id', 'desc')->first()->city;
+        $appid = '88e2bf476f822117752bf6e87fe1e69c';
+        $city = DB::table('dangerous')->first()->city;
+
+        $client = new GuzzleHttp\Client();
+        $res = $client->request('GET', "http://api.openweathermap.org/data/2.5/weather?q={$city}&appid={$appid}");
+
+        $wind = json_decode((string)$res->getBody())->wind->speed;
+        if($wind >= 10){
+            //Sendmail
+
+            DB::table('dangerous')->where('id', 1)->update(['dangerous' => 1, 'city' => $city]);
+        } elseif($wind < 10) {
+            //Sendmail
+        }
 
         return null;
     }
