@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use GuzzleHttp;
+use Illuminate\Support\Facades\Mail;
 
 
 class AlertChecker extends Command
@@ -35,8 +36,8 @@ class AlertChecker extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
+     * @throws *
+     * @return void
      */
     public function handle()
     {
@@ -48,13 +49,27 @@ class AlertChecker extends Command
 
         $wind = json_decode((string)$res->getBody())->wind->speed;
         if($wind >= 10){
-            //Sendmail
+
+            foreach(DB::table('requested_alerts')->get() as $q){
+                Mail::send('mail', ['content' => 'Dangerous winds of over 10 m/s, try to stay indoors.'], function ($message, $q){
+                    $message->from('weatherApp@pretendmail.com', 'Weather App');
+                    $message->to($q->email);
+                });
+            }
 
             DB::table('dangerous')->where('id', 1)->update(['dangerous' => 1, 'city' => $city]);
-        } elseif($wind < 10) {
-            //Sendmail
-        }
 
-        return null;
+        } elseif($wind < 10) {
+
+            foreach(DB::table('requested_alerts')->get() as $q){
+                Mail::send('mail', ['content' => 'Dangerous winds have subsided.'], function ($message, $q){
+                    $message->from('weatherApp@pretendmail.com', 'Weather App');
+                    $message->to($q->email);
+                });
+            }
+
+            DB::table('dangerous')->where('id', 1)->update(['dangerous' => 0, 'city' => $city]);
+
+        }
     }
 }
