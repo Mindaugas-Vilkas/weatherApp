@@ -23,21 +23,25 @@ class RequestWeatherController extends Controller
         $client = new GuzzleHttp\Client();
         $res = $client->request('GET', "http://api.openweathermap.org/data/2.5/weather?q={$city}&appid={$appid}");
         $resBody = json_decode((string)$res->getBody());
-        echo'<pre>';
-        echo'StatusCode';
-        print_r($res->getStatusCode());
-        echo'<br />WindDirect';
+//        echo'<pre>';
+//        echo'StatusCode';
+//        print_r($res->getStatusCode());
+//        print_r($resBody);
+//        echo'<br />WindDirect<br />';
+
         if(isset($resBody->wind->deg)){
-            $windDirection = $resBody->wind->deg / 45;
+            $windDirection = (int)$resBody->wind->deg / 45;
         } else {
-            $windDirection = 404;
+            $windDirection = 0;
         }
 
-        print_r($windDirection);
+        $directions = ['Northwards', 'Northeastwards', 'Eastwards', 'Southeastwards', 'Southwards', 'Southwestwards', 'Westwards', 'Northwestwards'];
+        $windDirection = $directions[$windDirection];
+
+//        print_r($windDirection);
+//        exit;
 
 
-
-        exit;
         return view('display', ['requestedCity' => $city, 'weatherArray'=>$resBody, 'windDirection'=>$windDirection]);
     }
 }
