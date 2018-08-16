@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRequestedLocationsTable extends Migration
+class DangerousConditions extends Migration
 {
     /**
      * Run the migrations.
@@ -12,10 +12,10 @@ class CreateRequestedLocationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('requested_locations', function (Blueprint $table) {
+        Schema::create('dangerous', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('email');
             $table->text('city');
+            $table->boolean('dangerous');
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ class CreateRequestedLocationsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('requested_locations');
+        Schema::drop('dangerous');
     }
 }
