@@ -16,6 +16,9 @@
         <br />
         <label for="requestAlertEmail">Enter your email</label>
         <input name="requestAlertEmail" id="requestAlertEmail" type="text">
+        <br />
+        <br />
+        <input type="submit" value="Sign up">
     </form>
     <br />
     <br /> <br />
