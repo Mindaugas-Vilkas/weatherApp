@@ -20,11 +20,4 @@
         <br />
         <input type="submit" value="Sign up">
     </form>
-    <br />
-    <br /> <br />
-    <br />
-    <form>
-        <label for="fakeIt">Fake it ?</label>
-        <input name="fakeIt" id="fakeIt" value="fakeIt" type="submit">
-    </form>
 @stop
