@@ -42,18 +42,14 @@ class AlertChecker extends Command
      */
     public function handle()
     {
-//        Storage::disk('local')->put('debug.txt', "Execution \n");
         $appid = '88e2bf476f822117752bf6e87fe1e69c';
         $city = DB::table('dangerous')->first()->city;
         $dangerous = DB::table('dangerous')->first()->dangerous;
-
-//        throw new \Error($city);
 
         $client = new GuzzleHttp\Client();
         $res = $client->request('GET', "http://api.openweathermap.org/data/2.5/weather?q={$city}&appid={$appid}");
 
         $wind = json_decode((string)$res->getBody())->wind->speed;
-        $wind = 9001; // Debug
         if($wind >= 10){
 
             foreach(DB::table('requested_alerts')->get() as $q){
@@ -75,7 +71,6 @@ class AlertChecker extends Command
             }
 
             DB::table('dangerous')->where('id', 1)->update(['dangerous' => 0, 'city' => $city]);
-
         }
     }
 }
