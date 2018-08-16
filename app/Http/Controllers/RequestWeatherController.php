@@ -4,14 +4,16 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use GuzzleHttp;
 
 class RequestWeatherController extends Controller
 {
     /**
-     * Show the profile for the given user.
+     * Show the weather for the given city.
      *
      * @param  Request
      * @return View
@@ -36,9 +38,23 @@ class RequestWeatherController extends Controller
         return view('display', ['requestedCity' => $city, 'weatherArray'=>$resBody, 'windDirection'=>$windDirection]);
     }
 
-    public function createAlert() {
 
+    /**
+     * Sign the user up in the database for alerts.
+     *
+     * @param  Request
+     * @return View
+     */
+    public function createAlert(Request $request) {
 
+        $email = $request->requestAlertEmail;
+        $city = $request->requestAlertCity;
+
+        $insert = DB::table('requested_locations')->insertGetId([
+            'email'       => $email,
+            'city'        => $city,
+            'created_at'  => Carbon::now()
+        ]);
 
         return view('signedup');
     }
