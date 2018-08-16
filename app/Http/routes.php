@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Http\Request;
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -12,5 +14,14 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('main');
 });
+
+Route::post('/get-weather', 'RequestWeatherController@getWeather');
+
+//route::post('/get-weather', function(Request $request) {
+//
+//
+//
+//    return view('display')->with(['request' => $request->all(), 'weatherJson' => '{"pretend":"I\'m", "JSON":"OK?"}']);
+//});
