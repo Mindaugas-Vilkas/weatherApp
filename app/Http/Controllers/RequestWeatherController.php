@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use GuzzleHttp;
@@ -20,16 +21,22 @@ class RequestWeatherController extends Controller
     {
         $appid = '88e2bf476f822117752bf6e87fe1e69c';
         $city = $request->requestCityWeather;
-        $client = new GuzzleHttp\Client();
-        $res = $client->request('GET', "http://api.openweathermap.org/data/2.5/weather?q={$city}&appid={$appid}");
-        $resBody = json_decode((string)$res->getBody());
 
+        // Caching every repeat request on a city for ten minutes as per recommendation from OpenWeatherMap
+        $resBody = Cache::remember("weather-{$city}", 10, function () use ($city, $appid) {
+            $client = new GuzzleHttp\Client();
+            $res = $client->request('GET', "http://api.openweathermap.org/data/2.5/weather?q={$city}&appid={$appid}");
+            return json_decode((string)$res->getBody());
+        });
+
+        // Check if wind direction is set in the response, none seems to mean 0-th degree facing wind.
         if(isset($resBody->wind->deg)) {
             $windDirection = (int)$resBody->wind->deg / 45;
         } else {
             $windDirection = 0;
         }
 
+        // Translate to human readable values for display.
         $directions = ['Northwards', 'Northeastwards', 'Eastwards', 'Southeastwards', 'Southwards', 'Southwestwards', 'Westwards', 'Northwestwards'];
         $windDirection = $directions[$windDirection];
 
